@@ -9,14 +9,10 @@ resource "aws_acm_certificate" "certificate" {
 
 resource "aws_route53_record" "route_53_validation_record" {
   for_each = {
-    for cert in aws_acm_certificate.certificate : cert => {
-      for_each = {
-        for dvo in cert.domain_validation_options : dvo.domain_name => {
-          name   = dvo.resource_record_name
-          record = dvo.resource_record_value
-          type   = dvo.resource_record_type
-        }
-      }
+    for cert in aws_acm_certificate.certificate : cert.domain_validation_options.domain_name => {
+      name   = cert.domain_validation_options.resource_record_name
+      record = cert.domain_validation_options.resource_record_value
+      type   = cert.domain_validation_options.resource_record_type
     }
   }
 

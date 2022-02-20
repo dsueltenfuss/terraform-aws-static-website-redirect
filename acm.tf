@@ -23,10 +23,10 @@ resource "aws_route53_record" "route_53_validation_record" {
 
 
   allow_overwrite = true
-  name            = each.value.value.name
-  records         = [each.value.value.record]
+  name            = each.value.for_each.name
+  records         = [each.value.for_each.record]
   ttl             = 60
-  type            = each.value.value.type
+  type            = each.value.for_each.type
   zone_id         = data.aws_route53_zone.validation_zone.zone_id
 }
 

@@ -13,5 +13,5 @@ variable "route_53_zone" {
 variable "workspaces" {
   description = "Used when using multiple workspaces and only creating the resources for specific ones"
   type        = list(any)
-  default     = null
+  default     = []
 }

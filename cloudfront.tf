@@ -1,9 +1,10 @@
 resource "aws_cloudfront_distribution" "cloudfront" {
+  count = local.create_resources ? 1 : 0
   origin {
     connection_attempts = 3
     connection_timeout  = 10
-    domain_name         = aws_s3_bucket_website_configuration.bucket_redirect.website_endpoint
-    origin_id           = aws_s3_bucket_website_configuration.bucket_redirect.website_endpoint
+    domain_name         = aws_s3_bucket_website_configuration.bucket_redirect[0].website_endpoint
+    origin_id           = aws_s3_bucket_website_configuration.bucket_redirect[0].website_endpoint
 
     custom_origin_config {
       http_port                = 80
@@ -25,10 +26,10 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   aliases = [var.source_website]
 
   default_cache_behavior {
-    cache_policy_id  = aws_cloudfront_cache_policy.cloudfront_cache_policy.id
+    cache_policy_id  = aws_cloudfront_cache_policy.cloudfront_cache_policy[0].id
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_s3_bucket_website_configuration.bucket_redirect.website_endpoint
+    target_origin_id = aws_s3_bucket_website_configuration.bucket_redirect[0].website_endpoint
 
     viewer_protocol_policy = "allow-all"
     compress               = true
@@ -42,13 +43,14 @@ resource "aws_cloudfront_distribution" "cloudfront" {
     }
   }
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate.certificate.arn
+    acm_certificate_arn      = aws_acm_certificate.certificate[0].arn
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
 }
 
 resource "aws_cloudfront_cache_policy" "cloudfront_cache_policy" {
+  count   = local.create_resources ? 1 : 0
   name    = join("", [replace(var.source_website, ".", "-"), "-CachingOptimized"])
   min_ttl = 1
   comment = "Default policy when CF compression is enabled"

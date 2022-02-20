@@ -49,7 +49,7 @@ resource "aws_cloudfront_distribution" "cloudfront" {
 }
 
 resource "aws_cloudfront_cache_policy" "cloudfront_cache_policy" {
-  name    = join("", [source_website, "-CachingOptimized"])
+  name    = join("", [var.source_website, "-CachingOptimized"])
   min_ttl = 1
   comment = "Default policy when CF compression is enabled"
   parameters_in_cache_key_and_forwarded_to_origin {

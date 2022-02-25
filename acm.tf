@@ -8,22 +8,12 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 resource "aws_route53_record" "route_53_validation_record" {
-  depends_on = [
-    aws_acm_certificate.certificate
-  ]
-  for_each = {
-    for dvo in try(aws_acm_certificate.certificate[0].domain_validation_options, []) : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-
+  count           = local.create_resources ? length(aws_acm_certificate.certificate[0].domain_validation_options) : 0
   allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
+  name            = tolist(aws_acm_certificate.certificate[0].domain_validation_options)[count.index].resource_record_name
+  records         = [tolist(aws_acm_certificate.certificate[0].domain_validation_options)[count.index].resource_record_value]
   ttl             = 60
-  type            = each.value.type
+  type            = tolist(aws_acm_certificate.certificate[0].domain_validation_options)[count.index].resource_record_type
   zone_id         = data.aws_route53_zone.validation_zone.zone_id
 }
 

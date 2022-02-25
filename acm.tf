@@ -8,6 +8,9 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 resource "aws_route53_record" "route_53_validation_record" {
+  depends_on = [
+    aws_acm_certificate.certificate
+  ]
   for_each = {
     for dvo in try(aws_acm_certificate.certificate[0].domain_validation_options, []) : dvo.domain_name => {
       name   = dvo.resource_record_name

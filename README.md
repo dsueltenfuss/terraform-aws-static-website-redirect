@@ -15,6 +15,9 @@ A terraform module to configure a website redirect for your AWS accounts.
 `workspaces` (optional)
 - A list of workspaces to create the resources for. If empty, it will create for all workspaces.
 
+`dns_ttl` (optional)
+- The TTL for the created DNS records. Defaults to 60 seconds.
+
 ## Contributing
 
 Contributions are welcome.

@@ -13,8 +13,6 @@ resource "aws_cloudfront_distribution" "cloudfront" {
       origin_protocol_policy   = "http-only"
       origin_read_timeout      = 30
       origin_ssl_protocols = [
-        "TLSv1",
-        "TLSv1.1",
         "TLSv1.2",
       ]
     }

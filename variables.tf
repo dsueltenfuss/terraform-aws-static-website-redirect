@@ -15,3 +15,8 @@ variable "workspaces" {
   type        = list(any)
   default     = []
 }
+
+variable "dns_ttl" {
+  description = "The TTL for the created DNS records. Defaults to 60 seconds"
+  default     = 60
+}
